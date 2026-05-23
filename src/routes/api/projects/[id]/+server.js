@@ -21,21 +21,22 @@ export async function GET({ params }) {
 export async function PUT({ params, request }) {
   try {
     const body = await request.json();
+
     await db.execute({
       sql: `
         UPDATE projects
-        SET title = ?, subtitle = ?, width = ?, height = ?, fps = ?, duration_seconds = ?, accent = ?, bg = ?, updated_at = datetime('now')
+        SET title = ?, html_code = ?, css_code = ?, js_code = ?, width = ?, height = ?, fps = ?, duration_seconds = ?, updated_at = datetime('now')
         WHERE id = ?
       `,
       args: [
-        body.title,
-        body.subtitle,
-        Number(body.width),
-        Number(body.height),
-        Number(body.fps),
-        Number(body.duration_seconds),
-        body.accent,
-        body.bg,
+        String(body.title || 'Untitled Project').trim(),
+        String(body.html_code || ''),
+        String(body.css_code || ''),
+        String(body.js_code || ''),
+        Number(body.width || 1080),
+        Number(body.height || 1080),
+        Number(body.fps || 30),
+        Number(body.duration_seconds || 3),
         params.id
       ]
     });
